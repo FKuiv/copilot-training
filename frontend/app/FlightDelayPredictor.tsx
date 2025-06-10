@@ -1,31 +1,22 @@
 "use client";
-import { useState } from "react";
-
-const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
-
-const airports = [
-  "JFK",
-  "LAX",
-  "ORD",
-  "ATL",
-  "DFW",
-  // Add more as needed
-];
+import { useState, useEffect } from "react";
+import { dayNameToIndex } from "./utils";
 
 export default function FlightDelayPredictor() {
   const [day, setDay] = useState("");
-  const [airport, setAirport] = useState("");
+  const [departureAirport, setDepartureAirport] = useState("");
+  const [destinationAirport, setDestinationAirport] = useState("");
+  const [airports, setAirports] = useState<any[]>([]);
   const [result, setResult] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/airports")
+      .then((res) => res.json())
+      .then((data) => setAirports(data.airports || []))
+      .catch(() => setAirports([]));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,11 +27,17 @@ export default function FlightDelayPredictor() {
       const res = await fetch("http://localhost:8000/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ day_of_week: day, airport }),
+        body: JSON.stringify({
+          day_of_week: dayNameToIndex(day),
+          departure_airport_id: Number(departureAirport),
+          destination_airport_id: Number(destinationAirport),
+        }),
       });
       if (!res.ok) throw new Error("API error");
       const data = await res.json();
-      setResult(data.prediction);
+      setResult(
+        `Probability of delay: ${(data.delay_probability * 100).toFixed(1)}%`
+      );
     } catch (err: any) {
       setError(err.message || "Unknown error");
     } finally {
@@ -62,23 +59,45 @@ export default function FlightDelayPredictor() {
           required
         >
           <option value="">Select a day</option>
-          {daysOfWeek.map((d) => (
+          {[
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ].map((d) => (
             <option key={d} value={d}>
               {d}
             </option>
           ))}
         </select>
-        <label className="font-semibold">Airport</label>
+        <label className="font-semibold">Departure Airport</label>
         <select
           className="border rounded px-3 py-2"
-          value={airport}
-          onChange={(e) => setAirport(e.target.value)}
+          value={departureAirport}
+          onChange={(e) => setDepartureAirport(e.target.value)}
           required
         >
-          <option value="">Select an airport</option>
+          <option value="">Select departure airport</option>
           {airports.map((a) => (
-            <option key={a} value={a}>
-              {a}
+            <option key={a.AirportID} value={a.AirportID}>
+              {a.AirportName || a.IATA || a.AirportID}
+            </option>
+          ))}
+        </select>
+        <label className="font-semibold">Destination Airport</label>
+        <select
+          className="border rounded px-3 py-2"
+          value={destinationAirport}
+          onChange={(e) => setDestinationAirport(e.target.value)}
+          required
+        >
+          <option value="">Select destination airport</option>
+          {airports.map((a) => (
+            <option key={a.AirportID} value={a.AirportID}>
+              {a.AirportName || a.IATA || a.AirportID}
             </option>
           ))}
         </select>
@@ -92,7 +111,7 @@ export default function FlightDelayPredictor() {
       </form>
       {result && (
         <div className="mt-6 text-center text-lg font-semibold text-green-600">
-          Prediction: {result}
+          {result}
         </div>
       )}
       {error && (
