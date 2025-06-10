@@ -57,7 +57,12 @@ def health_check():
 def get_airports():
     if airports_df is None:
         raise HTTPException(status_code=503, detail="Airport data not loaded correctly")
-    airports = airports_df.to_dict(orient="records")
+    # Standardize column names for frontend compatibility
+    airports = airports_df.rename(columns={
+        "AIRPORT_ID": "AirportID",
+        "AIRPORT_NAME": "AirportName",
+        "IATA": "IATA"
+    }).to_dict(orient="records")
     return {"airports": airports}
 
 @app.post("/predict", response_model=PredictionResponse)
