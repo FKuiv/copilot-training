@@ -42,6 +42,7 @@ class PredictionResponse(BaseModel):
     delay_probability: float
     day_name: str
     airport_id: int
+    airport_name: str  # Added for human-readable name
     
 @app.get("/")
 def read_root():
@@ -57,12 +58,17 @@ def health_check():
 def get_airports():
     if airports_df is None:
         raise HTTPException(status_code=503, detail="Airport data not loaded correctly")
-    # Standardize column names for frontend compatibility
+    # Rename columns for frontend compatibility
     airports = airports_df.rename(columns={
-        "AIRPORT_ID": "AirportID",
-        "AIRPORT_NAME": "AirportName",
-        "IATA": "IATA"
-    }).to_dict(orient="records")
+        "AIRPORT_ID": "airport_id",
+        "AIRPORT_NAME": "airport_name",
+        "IATA": "iata"
+    })
+    # Only include columns that exist
+    cols = ["airport_id", "airport_name"]
+    if "iata" in airports.columns:
+        cols.append("iata")
+    airports = airports[cols].to_dict(orient="records")
     return {"airports": airports}
 
 @app.post("/predict", response_model=PredictionResponse)
@@ -101,11 +107,23 @@ def predict_delay(request: PredictionRequest):
             0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday",
             4: "Friday", 5: "Saturday", 6: "Sunday"
         }
+
+        # Lookup airport name
+        airport_name = ""
+        if airports_df is not None:
+            match = airports_df[airports_df["AIRPORT_ID"] == request.destination_airport_id]
+            if not match.empty:
+                airport_name = match.iloc[0]["AIRPORT_NAME"]
+            else:
+                airport_name = "Unknown"
+        else:
+            airport_name = "Unknown"
         
         return {
             "delay_probability": probability,
             "day_name": day_names[request.day_of_week],
-            "airport_id": request.destination_airport_id
+            "airport_id": request.destination_airport_id,
+            "airport_name": airport_name
         }
         
     except Exception as e:

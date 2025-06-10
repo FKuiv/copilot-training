@@ -85,8 +85,10 @@ export default function FlightDelayPredictor() {
         >
           <option value="">Select departure airport</option>
           {airports.map((a) => (
-            <option key={a.AirportID} value={a.AirportID}>
-              {a.AirportName || a.IATA || a.AirportID}
+            <option key={a.airport_id} value={a.airport_id}>
+              {a.airport_name
+                ? `${a.airport_name}${a.iata ? ` (${a.iata})` : ""}`
+                : a.airport_id}
             </option>
           ))}
         </select>
@@ -101,8 +103,10 @@ export default function FlightDelayPredictor() {
         >
           <option value="">Select destination airport</option>
           {airports.map((a) => (
-            <option key={a.AirportID} value={a.AirportID}>
-              {a.AirportName || a.IATA || a.AirportID}
+            <option key={a.airport_id} value={a.airport_id}>
+              {a.airport_name
+                ? `${a.airport_name}${a.iata ? ` (${a.iata})` : ""}`
+                : a.airport_id}
             </option>
           ))}
         </select>
