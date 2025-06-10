@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { dayNameToIndex } from "./utils";
 import ResultCard from "./ResultCard";
 
@@ -18,6 +18,47 @@ export default function FlightDelayPredictor() {
       .then((data) => setAirports(data.airports || []))
       .catch(() => setAirports([]));
   }, []);
+
+  // Automatically trigger prediction when all fields are selected
+  useEffect(() => {
+    // Only trigger if all fields are filled and not loading
+    if (
+      day &&
+      departureAirport &&
+      destinationAirport &&
+      !loading
+    ) {
+      // Avoid duplicate requests if the same values are selected again
+      setLoading(true);
+      setError(null);
+      setResult(null);
+      fetch("http://localhost:8000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          day_of_week: dayNameToIndex(day),
+          departure_airport_id: Number(departureAirport),
+          destination_airport_id: Number(destinationAirport),
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("API error");
+          return res.json();
+        })
+        .then((data) => {
+          setResult(
+            `Probability of delay: ${(data.delay_probability * 100).toFixed(1)}%`
+          );
+        })
+        .catch((err: any) => {
+          setError(err.message || "Unknown error");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [day, departureAirport, destinationAirport]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -204,34 +245,6 @@ export default function FlightDelayPredictor() {
               ))}
             </select>
           </div>
-          <button
-            type="submit"
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white font-bold rounded-lg px-8 py-4 mt-4 shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-60 disabled:cursor-not-allowed"
-            disabled={loading}
-          >
-            {/* Paper airplane icon for submit */}
-            <svg
-              className="w-6 h-6 text-white"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 12.5L3 21l18-9-18-9 7.5 8.5z"
-              />
-            </svg>
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></span>
-                Predicting...
-              </span>
-            ) : (
-              "Predict Delay"
-            )}
-          </button>
         </form>
       </div>
       <ResultCard
