@@ -14,7 +14,7 @@ export default function Home() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-8 sm:p-20">
-        <h1 className="gradient-text text-4xl md:text-5xl font-bold mb-6 text-center tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight text-center gradient-text drop-shadow-lg z-10 relative animate-gradient-smooth">
           Flight Delay Predictor
         </h1>
         <p className="text-gray-300 mb-10 text-center max-w-xl opacity-80">

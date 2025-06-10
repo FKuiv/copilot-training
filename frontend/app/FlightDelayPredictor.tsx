@@ -46,14 +46,17 @@ export default function FlightDelayPredictor() {
   };
 
   return (
-    <div className="max-w-md w-full mx-auto bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 mt-8">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        Flight Delay Predictor
-      </h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <label className="font-semibold">Day of the Week</label>
+    <div className="max-w-md w-full mx-auto bg-gradient-to-br from-[#181c2b] via-[#232a47] to-[#1a1f38] border border-[#232a47] shadow-2xl rounded-2xl p-8 mt-8 backdrop-blur-md relative overflow-hidden">
+      {/* Futuristic glow */}
+      <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-tr from-blue-500 via-purple-500 to-cyan-400 opacity-30 rounded-full blur-2xl z-0 animate-pulse" />
+      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-500 opacity-20 rounded-full blur-2xl z-0 animate-pulse" />
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-5 z-10 relative"
+      >
+        <label className="font-semibold text-gray-200">Day of the Week</label>
         <select
-          className="border rounded px-3 py-2"
+          className="bg-[#232a47] border border-[#3b4261] rounded-lg px-4 py-3 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           value={day}
           onChange={(e) => setDay(e.target.value)}
           required
@@ -73,9 +76,9 @@ export default function FlightDelayPredictor() {
             </option>
           ))}
         </select>
-        <label className="font-semibold">Departure Airport</label>
+        <label className="font-semibold text-gray-200">Departure Airport</label>
         <select
-          className="border rounded px-3 py-2"
+          className="bg-[#232a47] border border-[#3b4261] rounded-lg px-4 py-3 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           value={departureAirport}
           onChange={(e) => setDepartureAirport(e.target.value)}
           required
@@ -87,9 +90,11 @@ export default function FlightDelayPredictor() {
             </option>
           ))}
         </select>
-        <label className="font-semibold">Destination Airport</label>
+        <label className="font-semibold text-gray-200">
+          Destination Airport
+        </label>
         <select
-          className="border rounded px-3 py-2"
+          className="bg-[#232a47] border border-[#3b4261] rounded-lg px-4 py-3 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           value={destinationAirport}
           onChange={(e) => setDestinationAirport(e.target.value)}
           required
@@ -103,19 +108,26 @@ export default function FlightDelayPredictor() {
         </select>
         <button
           type="submit"
-          className="bg-blue-600 text-white rounded px-4 py-2 mt-4 hover:bg-blue-700 disabled:opacity-50"
+          className="bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white font-bold rounded-lg px-6 py-3 mt-4 shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-60 disabled:cursor-not-allowed"
           disabled={loading}
         >
-          {loading ? "Predicting..." : "Predict Delay"}
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></span>
+              Predicting...
+            </span>
+          ) : (
+            "Predict Delay"
+          )}
         </button>
       </form>
       {result && (
-        <div className="mt-6 text-center text-lg font-semibold text-green-600">
+        <div className="mt-8 text-center text-lg font-semibold text-cyan-300 drop-shadow-lg z-10 relative animate-fade-in">
           {result}
         </div>
       )}
       {error && (
-        <div className="mt-6 text-center text-lg font-semibold text-red-600">
+        <div className="mt-8 text-center text-lg font-semibold text-pink-400 drop-shadow-lg z-10 relative animate-fade-in">
           Error: {error}
         </div>
       )}

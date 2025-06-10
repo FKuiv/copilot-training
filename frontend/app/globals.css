@@ -55,3 +55,24 @@ body {
   background-size: 200% auto;
   animation: shimmer 6s linear infinite;
 }
+
+@keyframes gradient-smooth {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-smooth {
+  background: var(--primary-gradient);
+  background-size: 200% 200%;
+  animation: gradient-smooth 8s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
