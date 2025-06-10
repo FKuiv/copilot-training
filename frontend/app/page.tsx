@@ -6,6 +6,7 @@ export default function Home() {
   const bgRef = useRef<HTMLDivElement>(null);
   const [mouse, setMouse] = useState({ x: 50, y: 50 }); // actual mouse
   const [animMouse, setAnimMouse] = useState({ x: 50, y: 50 }); // animated mouse
+  const [bubbleScale, setBubbleScale] = useState(1);
 
   // Track mouse movement
   useEffect(() => {
@@ -23,22 +24,14 @@ export default function Home() {
     let frame: number;
     const animate = () => {
       setAnimMouse((prev) => {
-        // Move 10% closer to the target per frame (~500ms lag)
-        const alpha = 0.05;
+        const alpha = 0.1;
         const newX = prev.x + (mouse.x - prev.x) * alpha;
         const newY = prev.y + (mouse.y - prev.y) * alpha;
         if (bgRef.current) {
           bgRef.current.style.setProperty("--mouse-x", `${newX}%`);
           bgRef.current.style.setProperty("--mouse-y", `${newY}%`);
-          // Opposite bubble
-          bgRef.current.style.setProperty(
-            "--mouse-x-opposite",
-            `${100 - newX}%`
-          );
-          bgRef.current.style.setProperty(
-            "--mouse-y-opposite",
-            `${100 - newY}%`
-          );
+          bgRef.current.style.setProperty("--mouse-x-opposite", `${100 - newX}%`);
+          bgRef.current.style.setProperty("--mouse-y-opposite", `${100 - newY}%`);
         }
         return { x: newX, y: newY };
       });
@@ -47,6 +40,16 @@ export default function Home() {
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
   }, [mouse.x, mouse.y]);
+
+  // Handle click to animate bubble scale
+  useEffect(() => {
+    const handleClick = () => {
+      setBubbleScale(1.25);
+      setTimeout(() => setBubbleScale(1), 250);
+    };
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
 
   return (
     <div
@@ -65,9 +68,10 @@ export default function Home() {
           position: "fixed",
           inset: 0,
           zIndex: 0,
+          transform: `scale(${bubbleScale})`,
+          transition: "transform 0.25s cubic-bezier(.4,2,.6,1)",
           background:
             "radial-gradient(600px circle at var(--mouse-x,50%) var(--mouse-y,50%), rgba(0,212,255,0.18) 0%, rgba(88,28,135,0.14) 60%, rgba(26,31,56,0.8) 100%)",
-          transition: "background 0.2s",
         }}
       />
       {/* Second bubble at the opposite side */}
@@ -77,9 +81,10 @@ export default function Home() {
           position: "fixed",
           inset: 0,
           zIndex: 0,
+          transform: `scale(${bubbleScale})`,
+          transition: "transform 0.25s cubic-bezier(.4,2,.6,1)",
           background:
-            "radial-gradient(600px circle at var(--mouse-x-opposite,50%) var(--mouse-y-opposite,50%), rgba(255,0,128,0.14) 0%, rgba(0,0,0,0.08) 60%, rgba(26,31,56,0.0) 100%)",
-          transition: "background 0.3s",
+            "radial-gradient(500px circle at var(--mouse-x-opposite,50%) var(--mouse-y-opposite,50%), rgba(255,0,128,0.14) 0%, rgba(0,0,0,0.08) 60%, rgba(26,31,56,0.0) 100%)",
         }}
       />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-8 sm:p-20">
