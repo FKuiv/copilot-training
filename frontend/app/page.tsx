@@ -4,21 +4,40 @@ import FlightDelayPredictor from "./FlightDelayPredictor";
 
 export default function Home() {
   const bgRef = useRef<HTMLDivElement>(null);
-  const [mouse, setMouse] = useState({ x: 50, y: 50 });
+  const [mouse, setMouse] = useState({ x: 50, y: 50 }); // actual mouse
+  const [animMouse, setAnimMouse] = useState({ x: 50, y: 50 }); // animated mouse
 
+  // Track mouse movement
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
       setMouse({ x, y });
-      if (bgRef.current) {
-        bgRef.current.style.setProperty("--mouse-x", `${x}%`);
-        bgRef.current.style.setProperty("--mouse-y", `${y}%`);
-      }
     };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
+
+  // Animate the background position with a delay (~500ms lag)
+  useEffect(() => {
+    let frame: number;
+    const animate = () => {
+      setAnimMouse((prev) => {
+        // Move 10% closer to the target per frame (~500ms lag)
+        const alpha = 0.1;
+        const newX = prev.x + (mouse.x - prev.x) * alpha;
+        const newY = prev.y + (mouse.y - prev.y) * alpha;
+        if (bgRef.current) {
+          bgRef.current.style.setProperty("--mouse-x", `${newX}%`);
+          bgRef.current.style.setProperty("--mouse-y", `${newY}%`);
+        }
+        return { x: newX, y: newY };
+      });
+      frame = requestAnimationFrame(animate);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [mouse.x, mouse.y]);
 
   return (
     <div
