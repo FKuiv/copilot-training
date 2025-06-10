@@ -24,12 +24,21 @@ export default function Home() {
     const animate = () => {
       setAnimMouse((prev) => {
         // Move 10% closer to the target per frame (~500ms lag)
-        const alpha = 0.1;
+        const alpha = 0.05;
         const newX = prev.x + (mouse.x - prev.x) * alpha;
         const newY = prev.y + (mouse.y - prev.y) * alpha;
         if (bgRef.current) {
           bgRef.current.style.setProperty("--mouse-x", `${newX}%`);
           bgRef.current.style.setProperty("--mouse-y", `${newY}%`);
+          // Opposite bubble
+          bgRef.current.style.setProperty(
+            "--mouse-x-opposite",
+            `${100 - newX}%`
+          );
+          bgRef.current.style.setProperty(
+            "--mouse-y-opposite",
+            `${100 - newY}%`
+          );
         }
         return { x: newX, y: newY };
       });
@@ -59,6 +68,18 @@ export default function Home() {
           background:
             "radial-gradient(600px circle at var(--mouse-x,50%) var(--mouse-y,50%), rgba(0,212,255,0.18) 0%, rgba(88,28,135,0.14) 60%, rgba(26,31,56,0.8) 100%)",
           transition: "background 0.2s",
+        }}
+      />
+      {/* Second bubble at the opposite side */}
+      <div
+        style={{
+          pointerEvents: "none",
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          background:
+            "radial-gradient(600px circle at var(--mouse-x-opposite,50%) var(--mouse-y-opposite,50%), rgba(255,0,128,0.14) 0%, rgba(0,0,0,0.08) 60%, rgba(26,31,56,0.0) 100%)",
+          transition: "background 0.3s",
         }}
       />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-8 sm:p-20">
