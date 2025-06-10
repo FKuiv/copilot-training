@@ -46,6 +46,14 @@ export default function FlightDelayPredictor() {
     }
   };
 
+  // Find airport names for display in result card
+  const departureAirportObj = airports.find(
+    (a) => String(a.airport_id) === departureAirport
+  );
+  const destinationAirportObj = airports.find(
+    (a) => String(a.airport_id) === destinationAirport
+  );
+
   return (
     <>
       <div className="max-w-2xl w-full mx-auto bg-gradient-to-br from-[#181c2b] via-[#232a47] to-[#1a1f38] border border-[#232a47] shadow-2xl rounded-2xl p-10 mt-8 backdrop-blur-md relative overflow-hidden">
@@ -70,7 +78,9 @@ export default function FlightDelayPredictor() {
                 d="M2.5 19.5l19-7-19-7v6l15 1-15 1v6z"
               />
             </svg>
-            <label className="font-semibold text-gray-200">Day of the Week</label>
+            <label className="font-semibold text-gray-200">
+              Day of the Week
+            </label>
           </div>
           <select
             className="bg-[#232a47] border border-[#3b4261] rounded-lg px-4 py-3 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
@@ -218,7 +228,27 @@ export default function FlightDelayPredictor() {
           </button>
         </form>
       </div>
-      <ResultCard result={result} error={error} />
+      <ResultCard
+        result={result}
+        error={error}
+        departureAirportName={
+          departureAirportObj
+            ? `${departureAirportObj.airport_name}${
+                departureAirportObj.iata ? ` (${departureAirportObj.iata})` : ""
+              }`
+            : undefined
+        }
+        destinationAirportName={
+          destinationAirportObj
+            ? `${destinationAirportObj.airport_name}${
+                destinationAirportObj.iata
+                  ? ` (${destinationAirportObj.iata})`
+                  : ""
+              }`
+            : undefined
+        }
+        day={day}
+      />
     </>
   );
 }

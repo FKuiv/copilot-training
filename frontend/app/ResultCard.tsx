@@ -3,9 +3,18 @@ import React from "react";
 type ResultCardProps = {
   result: string | null;
   error?: string | null;
+  departureAirportName?: string;
+  destinationAirportName?: string;
+  day?: string;
 };
 
-export default function ResultCard({ result, error }: ResultCardProps) {
+export default function ResultCard({
+  result,
+  error,
+  departureAirportName,
+  destinationAirportName,
+  day,
+}: ResultCardProps) {
   if (!result && !error) return null;
   return (
     <div className="max-w-2xl w-full mx-auto mt-6">
@@ -41,6 +50,21 @@ export default function ResultCard({ result, error }: ResultCardProps) {
             <span className="text-lg font-semibold text-cyan-300 drop-shadow-lg animate-fade-in">
               {result}
             </span>
+            {(departureAirportName || destinationAirportName || day) && (
+              <div className="mt-2 text-base text-cyan-100">
+                {day && (
+                  <div>
+                    <span className="font-semibold">Day:</span> {day}
+                  </div>
+                )}
+                {departureAirportName && destinationAirportName && (
+                  <div>
+                    <span className="font-semibold">Route:</span>{" "}
+                    {departureAirportName} &rarr; {destinationAirportName}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
         {error && (
