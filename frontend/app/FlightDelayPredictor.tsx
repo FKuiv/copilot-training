@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { dayNameToIndex } from "./utils";
 import ResultCard from "./ResultCard";
 
@@ -55,8 +55,8 @@ export default function FlightDelayPredictor() {
   );
 
   return (
-    <>
-      <div className="max-w-2xl w-full mx-auto bg-gradient-to-br from-[#181c2b] via-[#232a47] to-[#1a1f38] border border-[#232a47] shadow-2xl rounded-2xl p-10 mt-8 backdrop-blur-md relative overflow-hidden">
+    <div className="relative z-10">
+      <div className="max-w-2xl w-full mx-auto bg-gradient-to-br from-[#181c2b] via-[#232a47] to-[#1a1f38] border border-[#232a47] shadow-2xl rounded-2xl p-10 mt-8 backdrop-blur-md overflow-hidden">
         {/* Futuristic glow */}
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-tr from-blue-500 via-purple-500 to-cyan-400 opacity-30 rounded-full blur-2xl z-0 animate-pulse" />
         <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-500 opacity-20 rounded-full blur-2xl z-0 animate-pulse" />
@@ -255,6 +255,6 @@ export default function FlightDelayPredictor() {
         }
         day={day}
       />
-    </>
+    </div>
   );
 }

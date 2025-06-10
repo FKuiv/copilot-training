@@ -1,18 +1,47 @@
+"use client";
+import { useEffect, useRef, useState } from "react";
 import FlightDelayPredictor from "./FlightDelayPredictor";
 
 export default function Home() {
+  const bgRef = useRef<HTMLDivElement>(null);
+  const [mouse, setMouse] = useState({ x: 50, y: 50 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      setMouse({ x, y });
+      if (bgRef.current) {
+        bgRef.current.style.setProperty("--mouse-x", `${x}%`);
+        bgRef.current.style.setProperty("--mouse-y", `${y}%`);
+      }
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background with gradients and blurs */}
-      <div className="absolute inset-0 bg-[#060818] overflow-hidden">
-        {/* Gradient orbs */}
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600 opacity-20 blur-[100px]" />
-        <div className="absolute top-[30%] right-[-5%] w-[40%] h-[40%] rounded-full bg-purple-600 opacity-20 blur-[100px]" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[45%] h-[45%] rounded-full bg-cyan-400 opacity-15 blur-[100px]" />
-
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICA8cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjAzNDVCIiBzdHJva2Utd2lkdGg9IjAuNSIgLz4KPC9wYXR0ZXJuPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIiAvPgo8L3N2Zz4=')] opacity-10" />
-      </div>
-
+    <div
+      ref={bgRef}
+      className="min-h-screen relative overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(800px circle at var(--mouse-x,50%) var(--mouse-y,50%), #232a47 0%, #232a47 40%, #1a1f38 100%)",
+        transition: "background 0.2s",
+      }}
+    >
+      {/* Surreal color overlay following mouse */}
+      <div
+        style={{
+          pointerEvents: "none",
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          background:
+            "radial-gradient(600px circle at var(--mouse-x,50%) var(--mouse-y,50%), rgba(0,212,255,0.18) 0%, rgba(88,28,135,0.14) 60%, rgba(26,31,56,0.8) 100%)",
+          transition: "background 0.2s",
+        }}
+      />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-8 sm:p-20">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight text-center gradient-text drop-shadow-lg z-10 relative animate-gradient-smooth">
           Flight Delay Predictor
