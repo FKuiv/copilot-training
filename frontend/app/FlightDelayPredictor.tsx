@@ -65,6 +65,7 @@ export default function FlightDelayPredictor() {
           className="flex flex-col gap-6 z-10 relative"
         >
           <div className="flex items-center gap-2">
+            {/* Airplane icon for day of week */}
             <svg
               className="w-6 h-6 text-blue-400"
               fill="none"
@@ -75,7 +76,7 @@ export default function FlightDelayPredictor() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.5 19.5l19-7-19-7v6l15 1-15 1v6z"
+                d="M10.5 12.5L3 21l18-9-18-9 7.5 8.5z"
               />
             </svg>
             <label className="font-semibold text-gray-200">
@@ -104,6 +105,7 @@ export default function FlightDelayPredictor() {
             ))}
           </select>
           <div className="flex items-center gap-2">
+            {/* Airplane takeoff icon for departure */}
             <svg
               className="w-6 h-6 text-cyan-400"
               fill="none"
@@ -114,7 +116,7 @@ export default function FlightDelayPredictor() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.5 19.5l19-7-19-7v6l15 1-15 1v6z"
+                d="M2.25 19.5l19.5-7.5-7.5-2.5-2.5-7.5-2.5 7.5-7.5 2.5 19.5 7.5z"
               />
             </svg>
             <label className="font-semibold text-gray-200">
@@ -122,6 +124,7 @@ export default function FlightDelayPredictor() {
             </label>
           </div>
           <div className="relative">
+            {/* Airplane takeoff icon in select */}
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400 pointer-events-none"
               fill="none"
@@ -132,7 +135,7 @@ export default function FlightDelayPredictor() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.5 19.5l19-7-19-7v6l15 1-15 1v6z"
+                d="M2.25 19.5l19.5-7.5-7.5-2.5-2.5-7.5-2.5 7.5-7.5 2.5 19.5 7.5z"
               />
             </svg>
             <select
@@ -152,6 +155,7 @@ export default function FlightDelayPredictor() {
             </select>
           </div>
           <div className="flex items-center gap-2">
+            {/* Airplane landing icon for destination */}
             <svg
               className="w-6 h-6 text-purple-400"
               fill="none"
@@ -162,7 +166,7 @@ export default function FlightDelayPredictor() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.5 19.5l19-7-19-7v6l15 1-15 1v6z"
+                d="M21 21H3m18-3l-7.5-2.5-2.5-7.5-2.5 7.5L3 18l18 3z"
               />
             </svg>
             <label className="font-semibold text-gray-200">
@@ -170,6 +174,7 @@ export default function FlightDelayPredictor() {
             </label>
           </div>
           <div className="relative">
+            {/* Airplane landing icon in select */}
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400 pointer-events-none"
               fill="none"
@@ -180,7 +185,7 @@ export default function FlightDelayPredictor() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.5 19.5l19-7-19-7v6l15 1-15 1v6z"
+                d="M21 21H3m18-3l-7.5-2.5-2.5-7.5-2.5 7.5L3 18l18 3z"
               />
             </svg>
             <select
@@ -204,6 +209,7 @@ export default function FlightDelayPredictor() {
             className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white font-bold rounded-lg px-8 py-4 mt-4 shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-60 disabled:cursor-not-allowed"
             disabled={loading}
           >
+            {/* Paper airplane icon for submit */}
             <svg
               className="w-6 h-6 text-white"
               fill="none"
@@ -214,7 +220,7 @@ export default function FlightDelayPredictor() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M2.5 19.5l19-7-19-7v6l15 1-15 1v6z"
+                d="M10.5 12.5L3 21l18-9-18-9 7.5 8.5z"
               />
             </svg>
             {loading ? (
